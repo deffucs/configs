@@ -65,17 +65,21 @@ vim.pack.add({
 		src = "https://github.com/saghen/blink.cmp",
 		version = 'v1.7.0',
 	},
-	-- Mason would be for installing LSPs
 	{
-
+		descritpion = "LSP Installer",
+		src = "https://github.com/mason-org/mason.nvim",
+	},
+	{
+		descritpion = "LSP Configuration",
+		src = "https://github.com/mason-org/mason-lspconfig.nvim",
+	},
+	{
 		descritpion = 'Formatting / Highlighting / Language Structure Helper',
 		src = "https://github.com/nvim-treesitter/nvim-treesitter"
 	},
 	{
-
 		descritpion = 'REST Client',
 		src = "https://github.com/mistweaverco/kulala.nvim",
-
 	},
 	--{ src = "https://github.com/nvim-neotest/nvim-nio" },
 
@@ -101,13 +105,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- If no completion menu option is manually selected, then accepting will not pick anything
 vim.cmd("set completeopt+=noselect")
 
--- Autoformat on save
---vim.api.nvim_create_autocmd("BufWritePre", {
---	pattern = "*",
---	callback = function()
---		vim.lsp.buf.format({ async = false })
---	end,
---})
 
 -- This chunk to fix imports and format on save came from neovim section on go.dev
 vim.api.nvim_create_autocmd("BufWritePre", {
@@ -133,6 +130,10 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 	end
 })
 
+require "mason".setup()
+require "mason-lspconfig".setup({
+		ensure_installed = { "angularls", "html", "cssls", "gopls", "lua_ls"}
+})
 require "mini.pick".setup()
 require "oil".setup()
 require "nvim-treesitter.configs".setup({
@@ -169,6 +170,7 @@ vim.keymap.set('n', '<leader>fg', ':Pick grep_live<CR>')
 vim.keymap.set('n', '<leader>h', ':Pick help<CR>')
 vim.keymap.set('n', '<leader>-', ':Oil<CR>')
 
+-- This should be done automatically by mason-lspconfig now
 vim.lsp.enable({ "lua_ls", "gopls" })
 
 -- Find global define for vim variable for working with this config file
